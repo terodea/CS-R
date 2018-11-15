@@ -1,0 +1,52 @@
+---
+title: "Bike Sharing Demand"
+author: "Akshay Terode"
+date: "15 November 2018"
+output: html_document
+---
+### Data Fields : 
+* **datetime -** hourly date + timestamp  
+* **season -**  1 = spring, 2 = summer, 3 = fall, 4 = winter 
+* **holiday -** whether the day is considered a holiday
+* **workingday -** whether the day is neither a weekend nor holiday
+* **weather -** 
+  * *1:* Clear, Few clouds, Partly cloudy, Partly cloudy 
+  * *2:* Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist 
+  * *3:* Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds 
+  * *4:* Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog 
+* **temp -** temperature in Celsius
+* **atemp -** "feels like" temperature in Celsius
+* **humidity -** relative humidity
+* **windspeed -** wind speed
+* **casual -** number of non-registered user rentals initiated
+* **registered -** number of registered user rentals initiated
+* **count -** number of total rentals
+```{r}
+bikeshare <- read.csv ("/home/student/RCodes/Stats With R/Datasets/all/train.csv")
+head(bikeshare)
+```
+#### Checking wheter data frame has any missing value
+```{r}
+
+```
+
+```{r}
+bike <- bikeshare[,-c(1,10,11)]
+bike$season <- factor(bike$season,levels = c(1,2,3,4),labels = c("spring","summer","fall","winter"))
+bike$weather <- factor(bike$weather)
+```
+```{r}
+fit.lm <- lm(count ~. ,data = bike)
+summary(fit.lm)
+```
+### For test dataset
+```{r}
+bikesharetest <- read.csv ("/home/student/RCodes/Stats With R/Datasets/all/test.csv")
+head(bikesharetest)
+biketest <- bikesharetest[,-1]
+biketest$season <- factor(biketest$season,levels = c(1,2,3,4),labels = c("spring","summer","fall","winter"))
+biketest$weather <- factor(biketest$weather)
+pred_lm <- predict(fit.lm,newdata = biketest)
+pred_lm
+```
+
